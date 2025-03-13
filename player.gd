@@ -18,14 +18,19 @@ func _physics_process(delta):
 
 	# Normalize direction to prevent diagonal speed boost
 	if direction != Vector2.ZERO:
-		direction = direction.normalized() * speed
-		velocity = direction  # ✅ Ensure velocity is updated!
+		direction = direction.normalized()
+		velocity = direction * speed  # ✅ Ensure velocity is updated!
 		anim.play(get_animation_name(direction))
 	else:
 		velocity = Vector2.ZERO  # ✅ Ensure stopping works properly
 		anim.stop()
+		
+	move_and_slide()
 
-	move_and_slide()  # ✅ This should be at the END of the function!
+# ✅ Check for actual collisions
+	for i in range(get_slide_collision_count()):
+		var collision = get_slide_collision(i)
+		print("Collided with: ", collision.get_collider().name)  # ✅ This works!
 
 func get_animation_name(direction: Vector2) -> String:
 	if direction.x > 0 and direction.y == 0:
